@@ -360,9 +360,11 @@ func downloadEpisode(baseContentId string, info EpisodeInfo, audioLangs, subsLan
 func downloadSeasons(videoQuality, audioQuality *string, primaryAudio string, primarySub string, audioLangs, subsLangs []string, seasons []Season, baseDirectory string) {
 	workDone := true
 	for ind, season := range seasons {
+		Logf(LogLevel_Info, "[Downloading Seasons] %v/%v\n", ind+1, len(seasons))
+
 		episodes := getSeasonEpisodes(season.ID, primaryAudio, primarySub)
 
-		Logf(LogLevel_Info, "Downloading Season %v - Episodes %v\n", episodes[0].SeasonNumber, len(episodes))
+		Logf(LogLevel_Info, "[Downloading Season] Season %v - Episodes %v - %s\n", episodes[0].SeasonNumber, len(episodes), episodes[0].SeriesTitle)
 
 		var err error
 		for index, episode := range episodes {
@@ -373,7 +375,7 @@ func downloadSeasons(videoQuality, audioQuality *string, primaryAudio string, pr
 					time.Sleep(time.Second * time.Duration(10))
 					Logf(LogLevel_Debug, "Slept for %v of %v seconds\r", (i+1)*10, *downloadThrottle)
 				}
-				Logln(LogLevel_Debug, "\n")
+				Log(LogLevel_Debug, "\n")
 			}
 
 			info := EpisodeInfo{
@@ -403,7 +405,7 @@ func downloadSeasons(videoQuality, audioQuality *string, primaryAudio string, pr
 				time.Sleep(time.Second * time.Duration(10))
 				Logf(LogLevel_Debug, "Slept for %v of %v seconds\r", (i+1)*10, *downloadThrottle)
 			}
-			Logln(LogLevel_Debug, "\n")
+			Log(LogLevel_Debug, "\n")
 		}
 	}
 }
