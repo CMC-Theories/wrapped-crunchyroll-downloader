@@ -390,7 +390,7 @@ func downloadSeasons(videoQuality, audioQuality *string, primaryAudio string, pr
 				Title: episode.Title,
 			}
 
-			Logf(LogLevel_Info, "Downloading Video %v - %s\n", index+1, episode.Title)
+			Logf(LogLevel_Info, "[Downloading Video] %v - %s\n", index+1, episode.Title)
 
 			workDone, err = downloadEpisode(episode.ID, info, audioLangs, subsLangs, videoQuality, audioQuality, baseDirectory)
 			if err != nil {
