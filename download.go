@@ -15,8 +15,6 @@ import (
 	"github.com/unki2aut/go-mpd"
 )
 
-const maxWorkers = 10
-
 func buildUrl(base, representationId, file string, partNum *int64) string {
 	if partNum != nil {
 		file = strings.ReplaceAll(file, "$Number$", fmt.Sprintf("%05d", *partNum))
@@ -106,7 +104,7 @@ func downloadParts(baseUrl, representationId *string, set *mpd.AdaptationSet) (s
 	jobs := make(chan segmentJob, total)
 	var wg sync.WaitGroup
 
-	for w := 0; w < maxWorkers; w++ {
+	for w := 0; w < *maxWorkers; w++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -119,6 +117,7 @@ func downloadParts(baseUrl, representationId *string, set *mpd.AdaptationSet) (s
 				results[job.index] = data
 				count := done.Add(1)
 				Logf(LogLevel_Debug, "Downloaded %v of %v segments (%v%%)\r", count, total, (100*count)/int64(total))
+				time.Sleep(time.Second * time.Duration(*slowDownload))
 			}
 		}()
 	}

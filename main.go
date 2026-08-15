@@ -21,6 +21,8 @@ var (
 	downloadThrottle = flag.Int("throttle", 60, "Throttling between downloads to avoid tripping resource limits. Only used when not specifying a specific episode")
 	dryRun           = flag.Bool("dry-run", false, "Act like you will download all of a series but doesn't actually query. Will force throttle to be <=1 if set.")
 	verbosity        = flag.Int("loglevel", 2, "Logging level: (0=Errors, 1=Warnings, 2=Info, 3=Debug, 4=Trace).")
+	maxWorkers       = flag.Int("max-workers", 10, "The number of workers allowed for downloading streams.")
+	slowDownload     = flag.Int("slow-download", 0, "The number of seconds for a background worker to wait before starting another task, slows down downloads to reduce network impact.")
 )
 
 // parseLangs splits a comma-separated locale list, trimming spaces and dropping
@@ -114,6 +116,11 @@ func main() {
 	}
 
 	if *downloadThrottle < 0 {
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	if *slowDownload < 0 {
 		flag.Usage()
 		os.Exit(1)
 	}
